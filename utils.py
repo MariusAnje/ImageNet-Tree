@@ -1,12 +1,26 @@
+"""
+A class for creating a multi-branch (a parent has one, two, or more children) tree.
+Methods:
+
+1. add_son: add a child for the branch
+2. have_son: check if there is a certain node in this tree
+3. descend: return a certain child of one certain node having certain properties
+4. find_node: return a node having certain properties in the tree
+5. depth: the depth of the tree
+6. find_leaves: return the leaves of a tree
+7. count_leaves: return the number of leaves of a tree
+8. count_nodes: return number of nodes of a tree
+9. is_leaf: whether some certain node is a leaf node
+10. squeeze: delete parents with only one child and make the grandparents as the parent
+"""
+
 class Node():
     def __init__(self, name, ID, papa = None):
-        self.ID = ID
-        self.name = name
-        self.sons = []
-        self.papa = papa
+        self.ID = ID     # ImageNet ID
+        self.name = name  # ImageNet Name
+        self.sons = []    # children
+        self.papa = papa  # parent
     
-    def find_name(nameDict):
-        return nameDict[self.ID]
     
     def add_son(self, name = None, ID = None):
         if not self.have_son(name = name, ID = ID):
@@ -60,16 +74,21 @@ class Node():
                     max_depth = son_depth
             return max_depth + 1
     
-    def find_leaves(self, leaf_List = None):
+    def find_leaves(self):
+        leaf_List = []
+        self.find_leaves_R(leaf_List)
+        return leaf_List
+        
+    def find_leaves_R(self, leaf_List = None):
         if leaf_List == None:
             leaf_List = []
         if self.sons == []:
-            leaf_List += [self.name]
+            leaf_List += [self]
             return 1
         else:
             leaves = 0
             for son in self.sons:
-                son_leaves = son.find_leaves(leaf_List)
+                son_leaves = son.find_leaves_R(leaf_List)
                 leaves += son_leaves
             return leaves
         

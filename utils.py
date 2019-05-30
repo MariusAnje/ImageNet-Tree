@@ -1,20 +1,21 @@
-"""
-A class for creating a multi-branch (a parent has one, two, or more children) tree.
-Methods:
 
-1. add_son: add a child for the branch
-2. have_son: check if there is a certain node in this tree
-3. descend: return a certain child of one certain node having certain properties
-4. find_node: return a node having certain properties in the tree
-5. depth: the depth of the tree
-6. find_leaves: return the leaves of a tree
-7. count_leaves: return the number of leaves of a tree
-8. count_nodes: return number of nodes of a tree
-9. is_leaf: whether some certain node is a leaf node
-10. squeeze: delete parents with only one child and make the grandparents as the parent
-"""
 
 class Node():
+    """
+        A class for creating a multi-branch (a parent has one, two, or more children) tree.
+        Methods:
+
+        1. add_son: add a child for the branch
+        2. have_son: check if there is a certain node in this tree
+        3. descend: return a certain child of one certain node having certain properties
+        4. find_node: return a node having certain properties in the tree
+        5. depth: the depth of the tree
+        6. find_leaves: return the leaves of a tree
+        7. count_leaves: return the number of leaves of a tree
+        8. count_nodes: return number of nodes of a tree
+        9. is_leaf: whether some certain node is a leaf node
+        10. squeeze: delete parents with only one child and make the grandparents as the parent
+    """
     def __init__(self, name, ID, papa = None):
         self.ID = ID     # ImageNet ID
         self.name = name  # ImageNet Name
@@ -127,7 +128,7 @@ class Node():
         
     def squeeze(self):
         if self.sons == []:
-            return
+            return False
         else:
             if len(self.sons) == 1:
                 only_child = self.sons[0]
@@ -135,6 +136,22 @@ class Node():
                 only_child.papa = self.papa
                 self.papa.sons.remove(self)
                 only_child.squeeze()
+                return True
             else:
+                flag = False
                 for son in self.sons:
-                    son.squeeze()
+                    happy = son.squeeze()
+                    flag = flag or happy
+                return flag
+
+class INTree(Node):
+    """
+        A class for generating classifiers
+    """
+    def print_name(self):
+        print(self.name)
+        
+    def add_son(self, name = None, ID = None):
+        if not self.have_son(name = name, ID = ID):
+            son = INTree(name = name, ID = ID, papa = self)
+            self.sons += [son]

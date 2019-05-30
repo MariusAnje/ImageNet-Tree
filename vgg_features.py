@@ -3,7 +3,7 @@ import torchvision
 from torchvision import transforms
 import sklearn
 from sklearn import tree
-from tqdm import tqdm_notebook
+from tqdm import tqdm
 import numpy as np
 
 traindir = '/home/yanzy/data/train'
@@ -40,13 +40,16 @@ model.eval()
 features = []
 labels = []
 i = 0
+print('here')
 with torch.no_grad():
-    for data in tqdm_notebook(train_loader):
+    for data in tqdm(train_loader):
         image, label = data
         Y = model.features(image).view(-1,25088)
         features += Y.numpy().tolist()
         labels += label.numpy().tolist()
         i += 1
+        break
         
+print("there")
 np.save('features',features)
 np.save('labels', labels)
